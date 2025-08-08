@@ -502,7 +502,7 @@ const Contact = () => {
         });
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/contact/submit`, {
+      const response = await fetch("https://valix-digitalservices.onrender.com/api/contact/submit", {
         method: "POST",
         body: formDataToSend,
       });

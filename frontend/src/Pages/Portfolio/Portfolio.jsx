@@ -37,9 +37,8 @@ const Portfolio = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const filterSectionRef = useRef(null);
 
-  const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
-  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
-  
+  const API_URL = import.meta.env.VITE_API_URL || "https://valix-digitalservices.onrender.com/api";
+  const BASE_URL = "https://valix-digitalservices.onrender.com";
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
