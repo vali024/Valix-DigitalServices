@@ -1,0 +1,40 @@
+/* Add this to your Portfolio.css file */
+
+.portfolio-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer; /* Added cursor pointer to indicate interactive element */
+}
+
+.portfolio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Add a visual feedback for double-click */
+.portfolio-card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s;
+}
+
+/* Show a subtle hint about double-click functionality */
+.portfolio-card::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 0;
+  border-color: transparent rgba(79, 70, 229, 0.6) transparent transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.portfolio-card:hover::after {
+  opacity: 1;
+}

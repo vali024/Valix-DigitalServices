@@ -1,0 +1,327 @@
+.food-display {
+  padding: 80px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  scroll-margin-top: 80px;
+}
+
+.food-display-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+.food-display-header h2 {
+  font-size: 2.5em;
+  color: #3a7bd5;
+  position: relative;
+  opacity: 0;
+  animation: slideInLeft 0.6s ease forwards;
+}
+
+.food-display-header h2::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #23258e;
+  transform: scaleX(0);
+  animation: expandLine 0.6s ease forwards 0.6s;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 15px;
+  opacity: 0;
+  animation: slideInRight 0.6s ease forwards;
+}
+
+.category-tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 1em;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.category-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3a7bd5;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.category-tab:hover {
+  color: #3a7bd5;
+}
+
+.category-tab.active {
+  color: #3a7bd5;
+  font-weight: 500;
+}
+
+.category-tab.active::after {
+  transform: scaleX(1);
+}
+
+.food-display-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.view-all-card {
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  border-radius: 15px;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards 0.6s;
+}
+
+.view-all-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(107, 142, 35, 0.2);
+}
+
+.view-all-content {
+  text-align: center;
+  color: white;
+}
+
+.view-all-content i {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.view-all-card:hover i {
+  transform: translateX(10px);
+}
+
+.view-all-content h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.view-all-content p {
+  opacity: 0.9;
+  font-size: 0.9em;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes expandLine {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .food-display-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .food-display-header h2::after {
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+  }
+
+  .category-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .food-display-list {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+/* CTA Section */
+.food-display-cta-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 60px 20px;
+  margin-top: 40px;
+  border-radius: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.food-display-cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.food-display-cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.food-display-cta-container h2 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.food-display-cta-container p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards 0.2s;
+}
+
+.food-display-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #ffffff;
+  padding: 18px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards 0.4s;
+}
+
+.food-display-cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.food-display-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4);
+  background: #204bc1;
+}
+
+.food-display-cta-btn:hover::before {
+  left: 100%;
+}
+
+.food-display-cta-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.food-display-cta-btn:hover svg {
+  transform: scale(1.1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .food-display-cta-section {
+    padding: 60px 20px;
+    margin-top: 40px;
+    border-radius: 15px;
+  }
+
+  .food-display-cta-container h2 {
+    font-size: 2rem;
+  }
+
+  .food-display-cta-container p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .food-display-cta-btn {
+    padding: 15px 30px;
+    font-size: 1rem;
+  }
+}
