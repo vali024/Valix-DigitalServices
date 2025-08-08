@@ -94,7 +94,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
-                <ProjectRequests url="http://localhost:4000" />
+                <ProjectRequests url={import.meta.env.VITE_BACKEND_URL} />
               </AuthenticatedLayout>
             </ProtectedRoute>
           }

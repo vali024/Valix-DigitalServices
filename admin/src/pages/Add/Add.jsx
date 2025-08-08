@@ -145,7 +145,7 @@ const Add = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/food/add",
+        `${import.meta.env.VITE_BACKEND_URL}/api/food/add`,
         formData,
         {
           headers: {

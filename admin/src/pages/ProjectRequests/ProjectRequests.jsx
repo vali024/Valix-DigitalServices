@@ -65,7 +65,7 @@ const ProjectRequests = ({ url }) => {
         adminAuth.email
       );
       const response = await axios.get(
-        `${url || "http://localhost:4000"}/api/contact/all`,
+        `${url || import.meta.env.VITE_BACKEND_URL || "http://localhost:4000"}/api/contact/all`,
         {
           headers: {
             "admin-email": adminAuth.email,

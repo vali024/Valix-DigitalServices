@@ -31,9 +31,8 @@ const Portfolio = () => {
   const [fullscreenItem, setFullscreenItem] = useState(null);
   const [fullscreenType, setFullscreenType] = useState(null); // 'image' or 'video'
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
-  const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+  const apiUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+  const apiBaseUrl = `${apiUrl}/api`;  
   const adminAuth = JSON.parse(localStorage.getItem("adminAuth"));
   const adminEmail = adminAuth?.email;
 

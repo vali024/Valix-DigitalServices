@@ -17,7 +17,7 @@ const List = () => {
     category: "all",
     status: "all",
   });
-  const url = "http://localhost:4000";
+  const url = import.meta.env.VITE_BACKEND_URL;
 
   // Get unique categories from the list
   const categories = ["all", ...new Set(list.map((item) => item.category))];

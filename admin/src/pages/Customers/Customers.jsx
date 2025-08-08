@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 const Customers = () => {
   const navigate = useNavigate();
-  const url = "http://localhost:4000";
+  const url = import.meta.env.VITE_BACKEND_URL;
   const [customers, setCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");

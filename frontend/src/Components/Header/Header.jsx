@@ -48,8 +48,9 @@ const Header = () => {
   const navigate = useNavigate();
   const headerRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-  const BASE_URL = "http://localhost:4000";
+  const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+  
 
   const middleWords = [
     "Interactive",
