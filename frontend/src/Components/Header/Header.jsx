@@ -48,8 +48,8 @@ const Header = () => {
   const navigate = useNavigate();
   const headerRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || "https://valix-digitalservices.onrender.com/api";
-  const BASE_URL = "https://valix-digitalservices.onrender.com";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:4000";
 
   const middleWords = [
     "Interactive",
