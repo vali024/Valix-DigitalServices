@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 import "./Contact.css";
 
+const URL = import.meta.env.VITE_BACKEND_URL;
+
 // Toast Component
 const Toast = ({ message, type, isVisible, onClose }) => {
   useEffect(() => {
@@ -502,7 +504,8 @@ const Contact = () => {
         });
       }
 
-      const response = await fetch("https://valix-digitalservices.onrender.com/api/contact/submit", {
+      // Send to your backend API
+      const response = await fetch(`${URL}/api/contact/submit`, {
         method: "POST",
         body: formDataToSend,
       });

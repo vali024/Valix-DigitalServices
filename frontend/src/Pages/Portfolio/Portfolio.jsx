@@ -37,8 +37,7 @@ const Portfolio = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const filterSectionRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:4000";
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
@@ -47,15 +46,15 @@ const Portfolio = () => {
 
   useEffect(() => {
     fetchPortfolioItems();
-  }, [activeFilter]);
+  }, [activeFilter, URL]);
 
   const fetchPortfolioItems = async () => {
     try {
       setLoading(true);
       const url =
         activeFilter === "All"
-          ? `${API_URL}/portfolio`
-          : `${API_URL}/portfolio?category=${activeFilter}`;
+          ? `${URL}/api/portfolio`
+          : `${URL}/api/portfolio?category=${activeFilter}`;
 
       console.log("Fetching portfolio from:", url);
       const response = await axios.get(url);
@@ -112,7 +111,7 @@ const Portfolio = () => {
 
     const getImageUrl = (path) => {
       if (!path) return "";
-      return path.startsWith("/uploads") ? `${BASE_URL}${path}` : path;
+      return path.startsWith("/uploads") ? `${URL}${path}` : path;
     };
 
     return (
@@ -364,7 +363,7 @@ const Portfolio = () => {
                         <video
                           src={
                             item.image.startsWith("/uploads")
-                              ? `${BASE_URL}${item.image}`
+                              ? `${URL}${item.image}`
                               : item.image
                           }
                           muted
@@ -382,9 +381,9 @@ const Portfolio = () => {
                     ) : (
                       <img
                         src={
-                          item.image.startsWith("/uploads")
-                            ? `${BASE_URL}${item.image}`
-                            : item.image
+                          item.image.startsWith("http")
+                            ? item.image
+                            : `${URL}${item.image.startsWith("/") ? item.image : `/${item.image}`}`
                         }
                         alt={item.title}
                         className="card-image"

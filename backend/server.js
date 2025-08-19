@@ -8,24 +8,13 @@ import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import contactRouter from "./routes/contactRoute.js";
 import portfolioRouter from "./routes/portfolioRoute.js";
-import Razorpay from "razorpay";
-import crypto from "crypto";
-import Order from "./models/orderModel.js";
 import fs from "fs";
 import path from "path";
-
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
 
 // Validate required environment variables
 const requiredEnvVars = [
   "MONGODB_URI",
-  "JWT_SECRET",
-  "RAZORPAY_KEY_ID",
-  "RAZORPAY_KEY_SECRET",
+  "JWT_SECRET"
 ];
 
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
@@ -96,10 +85,10 @@ const validateRequest = (req, res, next) => {
       });
     }
 
-    if (!payment?.method || !["COD", "Online"].includes(payment.method)) {
+    if (!payment?.method || !["COD"].includes(payment.method)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid payment method",
+        message: "Only COD payment method is supported",
       });
     }
   }
@@ -108,93 +97,6 @@ const validateRequest = (req, res, next) => {
 };
 
 app.use(validateRequest);
-
-// Razorpay order creation endpoint
-app.post("/api/order/create", async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const options = {
-      amount: amount * 100, // Razorpay expects amount in paise
-      currency: "INR",
-      receipt: "order_" + Date.now(),
-    };
-
-    const order = await razorpay.orders.create(options);
-    res.json({
-      success: true,
-      data: {
-        order_id: order.id,
-        currency: order.currency,
-        amount: order.amount,
-        key_id: process.env.RAZORPAY_KEY_ID,
-      },
-    });
-  } catch (error) {
-    console.error("Razorpay order creation error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to create payment order",
-    });
-  }
-});
-
-// Payment verification endpoint
-app.post("/api/order/verify-payment", async (req, res) => {
-  try {
-    const {
-      orderId,
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-    } = req.body;
-
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
-
-    // Verify signature
-    const generated_signature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + "|" + razorpay_payment_id)
-      .digest("hex");
-
-    if (generated_signature === razorpay_signature) {
-      // Update order status
-      await Order.findByIdAndUpdate(orderId, {
-        "payment.status": "completed",
-        "payment.transactionId": razorpay_payment_id,
-        "payment.razorpayOrderId": razorpay_order_id,
-        status: "confirmed",
-      });
-
-      res.json({
-        success: true,
-        message: "Payment verified successfully",
-      });
-    } else {
-      // Update order status to failed if verification fails
-      await Order.findByIdAndUpdate(orderId, {
-        "payment.status": "failed",
-        status: "payment_failed",
-      });
-
-      res.status(400).json({
-        success: false,
-        message: "Invalid payment signature",
-      });
-    }
-  } catch (error) {
-    console.error("Payment verification error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Payment verification failed",
-    });
-  }
-});
 
 //api endpoints
 app.use("/api/food", foodRouter);
@@ -205,6 +107,11 @@ app.use("/api/order", orderRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/portfolio", portfolioRouter);
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.send("API Working");
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -212,10 +119,6 @@ app.use((err, req, res, next) => {
     success: false,
     message: "Something went wrong! Please try again later.",
   });
-});
-
-app.get("/", (req, res) => {
-  res.send("API Working");
 });
 
 app.listen(port, () => {

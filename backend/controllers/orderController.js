@@ -1,12 +1,5 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
-import Razorpay from "razorpay";
-import crypto from 'crypto';
-
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
 
 const placeOrder = async (req, res) => {
     try {
@@ -19,34 +12,19 @@ const placeOrder = async (req, res) => {
             amount,
             address,
             payment: {
-                method: payment.method,
-                status: payment.method === 'COD' ? 'pending' : 'initiated'
+                method: 'COD', // Only support COD for now
+                status: 'pending'
             },
-            status: payment.method === 'COD' ? 'confirmed' : 'awaiting_payment'
+            status: 'confirmed'
         });
         
         await newOrder.save();
-
-        // For COD orders, return success directly
-        if (payment.method === 'COD') {
-            await clearUserCart(req.userId);
-            return res.json({
-                success: true,
-                message: "Order placed successfully",
-                orderId: newOrder._id
-            });
-        }
-
-        // For online payments, create Razorpay order
-        const razorpayOrder = await razorpay.orders.create({
-            amount: Math.round(amount * 100), // Convert to paise
-            currency: "INR",
-            receipt: newOrder._id.toString()
-        });
-
-        // Update order with Razorpay order ID
-        await orderModel.findByIdAndUpdate(newOrder._id, {
-            'payment.razorpayOrderId': razorpayOrder.id
+        await clearUserCart(req.userId);
+        
+        return res.json({
+            success: true,
+            message: "Order placed successfully",
+            orderId: newOrder._id
         });
 
         res.json({
@@ -276,4 +254,4 @@ const deleteOrder = async (req, res) => {
     }
 };
 
-export { placeOrder, verifyOrderPayment, userOrders, listOrders, updateStatus, getCustomers, deleteOrder }
+export { placeOrder, userOrders, listOrders, updateStatus, getCustomers, deleteOrder }
