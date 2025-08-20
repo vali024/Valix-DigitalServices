@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   ExternalLink,
   Play,
@@ -10,68 +8,158 @@ import {
   Target,
   Layers,
   Clock,
-  Star,
-  Users,
   MessageCircle,
-  ArrowRight,
   CheckCircle,
-  Loader,
   X,
-  Instagram,
-  Linkedin,
-  Facebook,
-  Twitter,
-  Youtube,
+  Github,
 } from "lucide-react";
 import "./Portfolio.css";
-import "./double-click-styles.css"; // Import the new CSS file
+import "./double-click-styles.css";
+
+// Example portfolio data
+const examplePortfolio = [
+  {
+    id: "1",
+    title: "Restaurant Landing Page",
+    description: "A modern, responsive landing page for a high-end restaurant featuring smooth animations and online booking.",
+    category: "Web",
+    technologies: ["React", "Tailwind CSS", "Framer Motion"],
+    image: "/portfolio/restaurant-landing.jpg",
+    video: "/portfolio/Restostatic-siteV.mp4",
+    websiteUrl: "https://restaurant-demo.com",
+    githubUrl: "https://github.com/example/restaurant-landing",
+    featured: true,
+    completionDate: "2023",
+    client: "Fine Dining Co.",
+    details: [
+      "Interactive menu showcase",
+      "Table reservation system",
+      "Custom animations",
+      "Mobile-first design",
+      "Performance optimization"
+    ]
+  },
+  {
+    id: "2",
+    title: "E-commerce Mobile App",
+    description: "Full-featured e-commerce mobile application with real-time inventory and payment processing.",
+    category: "Design",
+    technologies: ["React Native", "Firebase", "Stripe"],
+    image: "/portfolio/ecommerce-app-showcase.jpg",
+    websiteUrl: "https://ecommerce-app-demo.com",
+    featured: true,
+    completionDate: "2023",
+    client: "ShopMax",
+    details: [
+      "User authentication",
+      "Payment integration",
+      "Push notifications",
+      "Order tracking",
+      "Wishlist feature"
+    ]
+  },
+  {
+    id: "3",
+    title: "Corporate Brand Video",
+    description: "Cinematic brand video showcasing company culture and values.",
+    category: "Video",
+    technologies: ["After Effects", "Premier Pro", "Cinema 4D"],
+    image: "/portfolio/brand-video-thumbnail.jpg",
+    video: "/portfolio/corporate-brand.mp4",
+    websiteUrl: "https://vimeo.com/example",
+    featured: false,
+    completionDate: "2023",
+    client: "TechCorp Inc.",
+    details: [
+      "3D animations",
+      "Custom motion graphics",
+      "Professional voiceover",
+      "Original soundtrack",
+      "4K resolution"
+    ]
+  },
+  {
+    id: "4",
+    title: "Social Media Campaign",
+    description: "Comprehensive social media campaign including animated posts and stories.",
+    category: "Social",
+    technologies: ["Photoshop", "Illustrator", "After Effects"],
+    image: "/portfolio/social-campaign.jpg",
+    video: "/portfolio/social-ads-reel.mp4",
+    websiteUrl: "https://instagram.com/example",
+    featured: true,
+    completionDate: "2023",
+    client: "Fashion Brand X",
+    details: [
+      "Instagram Stories",
+      "Facebook Ads",
+      "Animated posts",
+      "Engagement strategy",
+      "Analytics reporting"
+    ]
+  },
+  {
+    id: "5",
+    title: "Product 3D Visualization",
+    description: "Photorealistic 3D product renders and animations for marketing.",
+    category: "Design",
+    technologies: ["Blender", "Corona Renderer", "Photoshop"],
+    image: "/portfolio/3d-product-renders.jpg",
+    video: "/portfolio/product-animation.mp4",
+    websiteUrl: "https://behance.net/example",
+    featured: true,
+    completionDate: "2023",
+    client: "GadgetPro",
+    details: [
+      "Photorealistic rendering",
+      "Product animation",
+      "Lighting setup",
+      "Material design",
+      "Scene composition"
+    ]
+  },
+  {
+    id: "6",
+    title: "Educational Platform UI/UX",
+    description: "Complete UI/UX design for an online learning platform.",
+    category: "Design",
+    technologies: ["Figma", "Principle", "Protopie"],
+    image: "/portfolio/edu-platform-design.jpg",
+    websiteUrl: "https://figma.com/example",
+    featured: false,
+    completionDate: "2023",
+    client: "EduLearn",
+    details: [
+      "User research",
+      "Wireframing",
+      "Interactive prototypes",
+      "Design system",
+      "Usability testing"
+    ]
+  }
+];
 
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [isVisible, setIsVisible] = useState(false);
-  const [portfolioItems, setPortfolioItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const filterSectionRef = useRef(null);
-
-  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    fetchPortfolioItems();
-  }, [activeFilter, URL]);
-
-  const fetchPortfolioItems = async () => {
-    try {
-      setLoading(true);
-      const url =
-        activeFilter === "All"
-          ? `${URL}/api/portfolio`
-          : `${URL}/api/portfolio?category=${activeFilter}`;
-
-      console.log("Fetching portfolio from:", url);
-      const response = await axios.get(url);
-
-      if (!response.data || !response.data.data) {
-        throw new Error("Invalid response format from server");
-      }
-
-      console.log(`Fetched ${response.data.data.length} portfolio items`);
-      setPortfolioItems(response.data.data);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching portfolio items:", err);
-      setError("Failed to load portfolio items. Please try again later.");
-      setLoading(false);
+  // Filter portfolio items based on active filter
+  const filteredPortfolioItems = useMemo(() => {
+    if (activeFilter === "All") {
+      return examplePortfolio;
     }
-  };
+    return examplePortfolio.filter(item => 
+      item.category.toLowerCase().includes(activeFilter.toLowerCase())
+    );
+  }, [activeFilter]);
 
   const openMediaModal = (item) => {
     setSelectedMedia(item);
@@ -109,11 +197,6 @@ const Portfolio = () => {
   const MediaModal = ({ item, onClose }) => {
     if (!item) return null;
 
-    const getImageUrl = (path) => {
-      if (!path) return "";
-      return path.startsWith("/uploads") ? `${URL}${path}` : path;
-    };
-
     return (
       <div className="media-modal-overlay" onClick={onClose}>
         <div className="media-modal" onClick={(e) => e.stopPropagation()}>
@@ -122,82 +205,73 @@ const Portfolio = () => {
           </button>
 
           <div className="media-container">
-            {item.mediaType === "video" ? (
-              <video
-                src={getImageUrl(item.image)}
-                controls
-                className="modal-video"
-                autoPlay
-                playsInline
-                onError={(e) => {
-                  console.error("Video error:", e);
-                  e.target.outerHTML =
-                    '<div class="error-message">Video could not be loaded</div>';
-                }}
-              />
-            ) : (
-              <img
-                src={getImageUrl(item.image)}
-                alt={item.title}
-                className="modal-image"
-                onError={(e) => {
-                  console.error("Image error:", e);
-                  e.target.src =
-                    "https://via.placeholder.com/800x600?text=Image+Not+Found";
-                }}
-              />
-            )}
+            <img
+              src={item.image || "https://via.placeholder.com/800x600?text=Project+Image"}
+              alt={item.title}
+              className="modal-image"
+              onError={(e) => {
+                console.error("Image error:", e);
+                e.target.src = "https://via.placeholder.com/800x600?text=Image+Not+Found";
+              }}
+            />
           </div>
 
           <div className="modal-info">
             <h3>{item.title}</h3>
             <p className="modal-description">{item.description}</p>
 
-            {item.websiteUrl && (
-              <div className="modal-website">
+            <div className="modal-actions">
+              {item.websiteUrl && (
                 <button
                   onClick={() => openWebsite(item.websiteUrl)}
                   className="website-link-btn"
                 >
                   <ExternalLink size={16} />
-                  Visit Website
+                  View Live Demo
                 </button>
-              </div>
-            )}
-
-            {item.socialLinks &&
-              Object.keys(item.socialLinks).some(
-                (key) => item.socialLinks[key]
-              ) && (
-                <div className="modal-social">
-                  <h4>Social Links:</h4>
-                  <div className="social-links">
-                    {Object.entries(item.socialLinks).map(([platform, url]) => {
-                      if (!url) return null;
-                      const IconComponent = getSocialIcon(platform);
-                      return (
-                        <a
-                          key={platform}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="social-link"
-                          title={platform}
-                        >
-                          <IconComponent size={20} />
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
               )}
+              {item.githubUrl && (
+                <button
+                  onClick={() => openWebsite(item.githubUrl)}
+                  className="github-link-btn"
+                >
+                  <Github size={16} />
+                  View Code
+                </button>
+              )}
+            </div>
 
-            <div className="modal-tags">
-              {item.tags.map((tag) => (
-                <span key={tag} className="modal-tag">
-                  {tag}
-                </span>
-              ))}
+            <div className="modal-details">
+              <div className="detail-item">
+                <h4>Client</h4>
+                <p>{item.client}</p>
+              </div>
+              <div className="detail-item">
+                <h4>Completed</h4>
+                <p>{item.completionDate}</p>
+              </div>
+              <div className="detail-item">
+                <h4>Technologies</h4>
+                <div className="modal-tags">
+                  {item.technologies.map((tech) => (
+                    <span key={tech} className="modal-tag">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-features">
+              <h4>Key Features</h4>
+              <ul className="features-list">
+                {item.details.map((detail, index) => (
+                  <li key={index}>
+                    <CheckCircle size={16} className="feature-icon" />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -333,73 +407,34 @@ const Portfolio = () => {
       {/* Portfolio Grid */}
       <section className="portfolio-grid-section">
         <div className="container">
-          {loading ? (
-            <div className="portfolio-loading">
-              <Loader className="loading-icon" />
-              <p>Loading projects...</p>
-            </div>
-          ) : error ? (
-            <div className="portfolio-error">
-              <p>{error}</p>
-              <button onClick={fetchPortfolioItems} className="retry-button">
-                Try Again
-              </button>
-            </div>
-          ) : portfolioItems.length === 0 ? (
+          {filteredPortfolioItems.length === 0 ? (
             <div className="portfolio-empty">
               <p>No projects found in this category.</p>
             </div>
           ) : (
             <div className="portfolio-grid">
-              {portfolioItems.map((item) => (
+              {filteredPortfolioItems.map((item) => (
                 <div
-                  key={item._id}
+                  key={item.id}
                   className="portfolio-card"
                   onDoubleClick={() => openMediaModal(item)}
                 >
                   <div className="portfolio-card-image">
-                    {item.mediaType === "video" ? (
-                      <div className="video-thumbnail">
-                        <video
-                          src={
-                            item.image.startsWith("/uploads")
-                              ? `${URL}${item.image}`
-                              : item.image
-                          }
-                          muted
-                          playsInline
-                          onError={(e) => {
-                            console.error("Video thumbnail error:", e);
-                            e.target.style.display = "none";
-                            e.target.parentNode.style.backgroundColor = "#000";
-                          }}
-                        />
-                        <div className="video-overlay">
-                          <Play size={40} />
-                        </div>
-                      </div>
-                    ) : (
-                      <img
-                        src={
-                          item.image.startsWith("http")
-                            ? item.image
-                            : `${URL}${item.image.startsWith("/") ? item.image : `/${item.image}`}`
-                        }
-                        alt={item.title}
-                        className="card-image"
-                        onError={(e) => {
-                          console.error("Image error:", e);
-                          e.target.src =
-                            "https://via.placeholder.com/400x300?text=Image+Not+Found";
-                        }}
-                      />
-                    )}
+                    <img
+                      src={item.image || "https://via.placeholder.com/400x300?text=Project+Image"}
+                      alt={item.title}
+                      className="card-image"
+                      onError={(e) => {
+                        console.error("Image error:", e);
+                        e.target.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
+                      }}
+                    />
                     <div className="card-overlay">
                       <div className="overlay-content">
                         <div className="overlay-tags">
-                          {item.tags.slice(0, 2).map((tag) => (
-                            <span key={tag} className="overlay-tag">
-                              {tag}
+                          {item.technologies.slice(0, 2).map((tech) => (
+                            <span key={tech} className="overlay-tag">
+                              {tech}
                             </span>
                           ))}
                         </div>
@@ -407,7 +442,7 @@ const Portfolio = () => {
                           <button
                             className="overlay-action preview"
                             onClick={() => openMediaModal(item)}
-                            title="Preview"
+                            title="View Details"
                           >
                             <Eye size={20} />
                           </button>
@@ -415,9 +450,18 @@ const Portfolio = () => {
                             <button
                               className="overlay-action website"
                               onClick={() => openWebsite(item.websiteUrl)}
-                              title="Visit Website"
+                              title="Live Demo"
                             >
                               <ExternalLink size={20} />
+                            </button>
+                          )}
+                          {item.githubUrl && (
+                            <button
+                              className="overlay-action github"
+                              onClick={() => openWebsite(item.githubUrl)}
+                              title="View Code"
+                            >
+                              <Github size={20} />
                             </button>
                           )}
                         </div>
@@ -427,10 +471,7 @@ const Portfolio = () => {
                       <span className="category-badge">{item.category}</span>
                     </div>
                   </div>
-                  <div
-                    className="portfolio-card-content"
-                    onDoubleClick={() => openMediaModal(item)}
-                  >
+                  <div className="portfolio-card-content">
                     <h3 className="card-title">{item.title}</h3>
                     <p className="card-description">{item.description}</p>
                     <div className="card-client-info">
@@ -438,45 +479,16 @@ const Portfolio = () => {
                         <span className="client-label">Client:</span>
                         <span className="client-name">{item.client}</span>
                       </div>
-                      <div className="result-detail">
-                        <CheckCircle className="result-icon" />
-                        <span className="result-text">{item.result}</span>
+                      <div className="completion-date">
+                        <Clock className="date-icon" size={14} />
+                        <span className="date-text">{item.completionDate}</span>
                       </div>
                     </div>
 
-                    {item.socialLinks &&
-                      Object.keys(item.socialLinks).some(
-                        (key) => item.socialLinks[key]
-                      ) && (
-                        <div className="card-social">
-                          <span className="social-label">Connect:</span>
-                          <div className="card-social-links">
-                            {Object.entries(item.socialLinks).map(
-                              ([platform, url]) => {
-                                if (!url) return null;
-                                const IconComponent = getSocialIcon(platform);
-                                return (
-                                  <a
-                                    key={platform}
-                                    href={url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="card-social-link"
-                                    title={platform}
-                                  >
-                                    <IconComponent size={16} />
-                                  </a>
-                                );
-                              }
-                            )}
-                          </div>
-                        </div>
-                      )}
-
                     <div className="card-tags">
-                      {item.tags.map((tag) => (
-                        <span key={tag} className="card-tag">
-                          {tag}
+                      {item.technologies.map((tech) => (
+                        <span key={tech} className="card-tag">
+                          {tech}
                         </span>
                       ))}
                     </div>

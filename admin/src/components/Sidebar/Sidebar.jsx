@@ -25,10 +25,6 @@ const Sidebar = () => {
           <FaShoppingBag className="icon" />
           <p>Orders</p>
         </NavLink>
-        <NavLink to="/customers" className="sidebar-option">
-          <FaUsers className="icon" />
-          <p>Customers</p>
-        </NavLink>
         <NavLink to="/project-requests" className="sidebar-option">
           <FaBriefcase className="icon" />
           <p>Project Requests</p>

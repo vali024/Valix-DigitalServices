@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import Add from "./pages/Add/Add";
 import List from "./pages/List/List";
 import Orders from "./pages/Orders/Orders";
-import Customers from "./pages/Customers/Customers";
 import ProjectRequests from "./pages/ProjectRequests/ProjectRequests";
 import Portfolio from "./pages/Portfolio/Portfolio";
 import AddPortfolio from "./pages/Portfolio/AddPortfolio";
@@ -75,16 +74,6 @@ const App = () => {
             <ProtectedRoute>
               <AuthenticatedLayout>
                 <Orders />
-              </AuthenticatedLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/customers"
-          element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Customers />
               </AuthenticatedLayout>
             </ProtectedRoute>
           }

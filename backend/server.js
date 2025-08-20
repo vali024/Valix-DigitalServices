@@ -7,7 +7,6 @@ import userRouter from "./routes/userRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import contactRouter from "./routes/contactRoute.js";
-import portfolioRouter from "./routes/portfolioRoute.js";
 import fs from "fs";
 import path from "path";
 
@@ -105,7 +104,6 @@ app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/contact", contactRouter);
-app.use("/api/portfolio", portfolioRouter);
 
 // Health check endpoint
 app.get("/", (req, res) => {
