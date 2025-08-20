@@ -89,16 +89,6 @@ const App = () => {
           }
         />
         <Route
-          path="/portfolio"
-          element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Portfolio />
-              </AuthenticatedLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/add-portfolio"
           element={
             <ProtectedRoute>

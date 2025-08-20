@@ -29,10 +29,6 @@ const Sidebar = () => {
           <FaBriefcase className="icon" />
           <p>Project Requests</p>
         </NavLink>
-        <NavLink to="/portfolio" className="sidebar-option">
-          <FaImages className="icon" />
-          <p>Portfolio</p>
-        </NavLink>
       </div>
     </div>
   );

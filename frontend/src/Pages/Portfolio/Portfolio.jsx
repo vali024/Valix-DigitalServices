@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 import "./Portfolio.css";
 import "./double-click-styles.css";
+import tecnho from "../../assets/DigitalM.png";
+import cont from "../../assets/Content.png";
+
 
 // Example portfolio data
 const examplePortfolio = [
@@ -24,7 +27,7 @@ const examplePortfolio = [
     description: "A modern, responsive landing page for a high-end restaurant featuring smooth animations and online booking.",
     category: "Web",
     technologies: ["React", "Tailwind CSS", "Framer Motion"],
-    image: "/portfolio/restaurant-landing.jpg",
+    image: tecnho,
     video: "/portfolio/Restostatic-siteV.mp4",
     websiteUrl: "https://restaurant-demo.com",
     githubUrl: "https://github.com/example/restaurant-landing",
@@ -45,7 +48,7 @@ const examplePortfolio = [
     description: "Full-featured e-commerce mobile application with real-time inventory and payment processing.",
     category: "Design",
     technologies: ["React Native", "Firebase", "Stripe"],
-    image: "/portfolio/ecommerce-app-showcase.jpg",
+    image: cont,
     websiteUrl: "https://ecommerce-app-demo.com",
     featured: true,
     completionDate: "2023",
