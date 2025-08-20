@@ -6,7 +6,6 @@ import foodRouter from "./routes/foodRoute.js";
 import userRouter from "./routes/userRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
-import contactRouter from "./routes/contactRoute.js";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import Order from "./models/orderModel.js";
@@ -61,12 +60,6 @@ connectDB().catch((err) => {
   console.error("Failed to connect to database:", err);
   process.exit(1);
 });
-
-// Create uploads directory for contacts if it doesn't exist
-const contactUploadsDir = path.join(process.cwd(), 'uploads', 'contacts');
-if (!fs.existsSync(contactUploadsDir)) {
-  fs.mkdirSync(contactUploadsDir, { recursive: true });
-}
 
 // Request validation middleware
 const validateRequest = (req, res, next) => {
@@ -201,7 +194,6 @@ app.use("/images", express.static("uploads"));
 app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
-app.use("/api/contact", contactRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
